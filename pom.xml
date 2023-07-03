@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.hm.keycloak.undertow</groupId>
+    <artifactId>keycloak-undertow-handler-cookie-jar</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>keycloak-undertow-handler-cookie-jar</name>
+    <description>Keycloak connector HTTP pour les appels HTTP</description>
+
+    <!-- Repository pour les livraisons -->
+    <distributionManagement>
+        <site>
+            <id>sihm.maven.sites</id>
+            <url>${sihm.sftp.javadoc}</url>
+        </site>
+        <repository>
+            <id>sihm.release</id>
+            <name>Repository Interne des Releases</name>
+            <url>${hm.repository.lib.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>sihm.snapshots</id>
+            <name>Repository Interne des Snapshots</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>${hm.repository.snapshot.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <!-- HM dependencies version -->
+        <!-- External dependency version -->
+        <org.slf4j.version>1.7.36</org.slf4j.version>
+        <io.undertow.version>2.2.17.Final</io.undertow.version>
+        <!-- surefire -->
+        <surefire.outputDir>${project.build.directory}/surefire-reports</surefire.outputDir>
+        <!-- jacoco -->
+        <jacoco.out.ut.file>jacoco.exec</jacoco.out.ut.file>
+        <jacoco.out.it.file>jacoco-it.exec</jacoco.out.it.file>
+        <jacoco.outputDir>${project.build.directory}/jacoco</jacoco.outputDir>
+        <!-- sonar -->
+        <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
+    <!-- Paramètres gestionnaire de version -->
+    <scm>
+        <connection>scm:git:https://github.com/hm-it/keycloak-undertow-handler-cookie-jar.git</connection>
+        <developerConnection>scm:git:https://github.com/hm-it/keycloak-undertow-handler-cookie-jar.git</developerConnection>
+        <url>https://github.com/hm-it/keycloak-undertow-handler-cookie-jar</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <!-- Paramètres gestionnaire de ticket -->
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/hm-it/keycloak-undertow-handler-cookie-jar/issues</url>
+    </issueManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-core</artifactId>
+            <version>${io.undertow.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.sonar-plugins.java</groupId>
+            <artifactId>sonar-jacoco-listeners</artifactId>
+            <version>3.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                    only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-compiler-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [3.0.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>compile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <!-- plugin jacoco: Utilisé pour produire les rapports d'analyse de code 
+                    pour Sonar -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.7</version>
+                    <executions>
+                        <execution>
+                            <id>merge-results</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>merge</goal>
+                            </goals>
+                            <configuration>
+                                <fileSets>
+                                    <fileSet>
+                                        <directory>${project.build.directory}/jacoco</directory>
+                                        <includes>
+                                            <include>*.exec</include>
+                                        </includes>
+                                    </fileSet>
+                                </fileSets>
+                                <destFile>${project.build.directory}/jacoco-aggregate/aggregate.exec</destFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>post-merge-report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${project.build.directory}/jacoco-aggregate/aggregate.exec</dataFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+            </plugin>
+
+            <!-- surefire plugin Utilisé pour lancer les tests unitaires et exclure 
+                les tests d'intégration. Ils seront lancés par le plugin failsafe -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <argLine>-Xmx1G -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC
+                        -XX:+CMSClassUnloadingEnabled ${jacoco.agent.ut.arg}</argLine>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- failsafe plugin: Utilisé pour les tests d'intégration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <reportsDirectory>${surefire.outputDir}</reportsDirectory>
+                    <argLine>-Xmx1G -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC
+                        -XX:+CMSClassUnloadingEnabled ${jacoco.agent.it.arg}</argLine>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- plugin jacoco: Utilisé pour produire les rapports d'analyse de code 
+                pour Sonar -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <!-- Prepares a variable, jacoco.agent.ut.arg, that contains the info 
+                        to be passed to the JVM hosting the code being tested. -->
+                    <execution>
+                        <id>prepare-ut-agent</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${jacoco.outputDir}/${jacoco.out.ut.file}</destFile>
+                            <propertyName>jacoco.agent.ut.arg</propertyName>
+                            <append>true</append>
+                        </configuration>
+                    </execution>
+                    <!-- Prepares a variable, jacoco.agent.it.arg, that contains the info 
+                        to be passed to the JVM hosting the code being tested. -->
+                    <execution>
+                        <id>prepare-it-agent</id>
+                        <!-- moved to package phase to be sure all pre-integration test have 
+                            it already set to bring up environments with jacoco agent as JVM params -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${jacoco.outputDir}/${jacoco.out.it.file}</destFile>
+                            <propertyName>jacoco.agent.it.arg</propertyName>
+                            <append>true</append>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
