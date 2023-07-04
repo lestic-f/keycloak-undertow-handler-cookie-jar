@@ -38,7 +38,7 @@
         <!-- HM dependencies version -->
         <!-- External dependency version -->
         <org.slf4j.version>1.7.36</org.slf4j.version>
-        <io.undertow.version>2.2.17.Final</io.undertow.version>
+        <io.undertow.version>2.1.0.Final</io.undertow.version>
         <!-- surefire -->
         <surefire.outputDir>${project.build.directory}/surefire-reports</surefire.outputDir>
         <!-- jacoco -->
