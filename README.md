@@ -22,5 +22,5 @@ La configuration se fait au choix dans la conf Undertow ou WildFly :
 Pour connaître la version du module **Undertow Core** utilisé par Keycloak :  
 Voir le jar sur le server à l'emplacement => modules\system\layers\base\io\undertow\core\main\undertow-core-{version}.jar
     
-Pour connaitre la version de **WildFly** utilisé par Keycloak :  
+Pour connaître la version de **WildFly** utilisé par Keycloak :  
 Voir le jar sur le server à l'emplacement => modules\system\layers\base\org\wildfly\extension\undertow\main\wildfly-undertow-{version}.jar
